@@ -1,0 +1,72 @@
+#!/bin/zsh
+
+show_usage() {
+    echo "┌───────────────────┐"
+    echo "| new_script <name> |"
+    echo "└───────────────────┘"
+}
+
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    show_usage
+    exit 0
+fi
+
+if [[ -z "$1" ]]; then
+    echo "No file name provided"
+    exit 1
+fi
+
+expand_tilde() {
+    echo "$1" | sed "s|^~$|${HOME}|g; s|^~|${HOME}|g"
+}
+
+SCRIPT_DIR=$(expand_tilde "~/dotfiles/scripts")
+BIN_DIR=$(expand_tilde "~/bin")
+TARGET_SCRIPT="$SCRIPT_DIR/$1"
+SYMLINK_TARGET="$BIN_DIR/$1"
+
+mkdir -p "$SCRIPT_DIR"
+
+if [[ -e "$TARGET_SCRIPT" ]]; then
+    echo "Script file '$TARGET_SCRIPT' already exists."
+    exit 1
+fi
+
+if [[ -e "$SYMLINK_TARGET" ]]; then
+    echo "Symbolic link '$SYMLINK_TARGET' already exists."
+    exit 1
+fi
+
+if [ -f "$SCRIPT_DIR/boilerplate" ]; then
+    cat "$SCRIPT_DIR/boilerplate" > "$TARGET_SCRIPT"
+else
+    touch "$TARGET_SCRIPT"
+    echo "Boilerplate file not found. Created empty script."
+fi
+
+chmod +x "$TARGET_SCRIPT"
+
+ln -s "$TARGET_SCRIPT" "$SYMLINK_TARGET"
+
+echo "Created new script: $TARGET_SCRIPT"
+echo "Linked to: $SYMLINK_TARGET"
+
+echo "Open $TARGET_SCRIPT? (y/n)"
+read -r response
+if [[ "$response" == "y" || "$response" == "Y" ]]; then
+    echo "[1] Open with zopen"
+    echo "[2] Open with Vim"
+    echo "[3] Open with Zed"
+    read buffer_type
+    if [[ "$buffer_type" == "1" ]]; then
+        zopen "$TARGET_SCRIPT"
+    elif [[ "$buffer_type" == "2" ]]; then
+        vim "$TARGET_SCRIPT"
+    elif [[ "$buffer_type" == "3" ]]; then
+        zed "$TARGET_SCRIPT"
+    else
+        echo "Invalid choice."
+    fi
+fi
+
+exit 0

@@ -1,0 +1,33 @@
+#!/bin/zsh
+
+function show_usage {
+    echo "┌─────────┐"
+    echo "| sync_df |"
+    echo "└─────────┘"
+}
+
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    show_usage
+    exit 0
+fi
+
+branch=$(git branch --show-current)
+
+if [[ -z "$branch" ]]; then
+    echo "No branch found"
+    exit 1
+fi
+
+if [[ "$branch" == "main" ]]; then
+    git pull origin main
+    exit 1
+fi
+
+echo "Not on main. Switch to main? (y/n): "
+read -r answer
+if [[ "$answer" == "y" ]]; then
+    git checkout main
+    git pull origin main
+else
+    echo "Aborted"
+fi

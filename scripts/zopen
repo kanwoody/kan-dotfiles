@@ -8,6 +8,11 @@ function show_usage {
     echo "└────────────────────────────────────────────────────────────┘"
 }
 
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    show_usage
+    exit 0
+fi
+
 if [[ -z "$1" ]]; then
   echo "Error: Please provide a path to open." >&2
   show_usage # Optionally, show usage when no argument is provided
@@ -17,11 +22,6 @@ fi
 if [[ ! -e "$1" ]]; then
     echo "Error: The path '$1' does not exist." >&2
     exit 1
-fi
-
-if [[ "$1" == "-h" || "$1" == "--help" ]]; then
-    show_usage
-    exit 0
 fi
 
 if ! zed -a "$1"; then

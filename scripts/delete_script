@@ -1,0 +1,47 @@
+#!/bin/zsh
+
+function show_usage {
+    echo "┌─┐"
+    echo "||"
+    echo "└─┘"
+}
+
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    show_usage
+    exit 0
+fi
+
+if [[ -z "$1" ]]; then
+    echo "No argument provided"
+    exit 1
+fi
+
+echo "Are you sure you want to delete $1? (y/n)"
+read del
+
+if [[ "$del" == "n" || "$del" == "N" ]]; then
+    echo "Deletion cancelled"
+    exit 0
+fi
+
+expand_tilde() {
+    echo "$1" | sed "s|^~$|${HOME}|g; s|^~|${HOME}|g"
+}
+
+SCRIPT_DIR=$(expand_tilde "~/dotfiles/scripts")
+ARCHIVE_DIR=$(expand_tilde "~/dotfiles/archives")
+BIN_DIR=$(expand_tilde "~/bin")
+TARGET_SCRIPT="$SCRIPT_DIR/$1"
+SYMLINK_TARGET="$BIN_DIR/$1"
+
+echo "Do you want to archive $1? (y/n)"
+read archive
+if [[ "$archive" == "y" || "$archive" == "Y" ]]; then
+    touch "$ARCHIVE_DIR/$1"
+    cat "$TARGET_SCRIPT" >> "$ARCHIVE_DIR/$1"
+fi
+
+unlink "$SYMLINK_TARGET"
+rm "$TARGET_SCRIPT"
+
+exit 0
