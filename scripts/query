@@ -1,0 +1,40 @@
+#!/bin/zsh
+
+function show_usage {
+    echo "┌────────────────────────────────────────────────────────────┐"
+    echo "| Usage: query [database_name] OR [optional_flag]            |"
+    echo "|   Starts MySQL service and connects as root user           |"
+    echo "|   Optionally connects to the specified database            |"
+    echo "| Optional flags:                                            |"
+    echo "|   -d OR --done . . . . stop the mysql background service   |"
+    echo "|   -h OR --help . . . . show query usage                    |"
+    echo "└────────────────────────────────────────────────────────────┘"
+}
+
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    show_usage
+    exit 0
+fi
+
+if [[ "$1" == "-d" || "$1" == "--done" ]]; then
+    if ! brew services stop mysql; then
+        echo "Error: mysql is not an active background service"
+    fi
+    exit 0
+fi
+
+if ! brew services start mysql; then
+    echo "Error: Failed to start MySQL service" >&2
+    exit 1
+else
+    echo "Successfully started the mysql service"
+fi
+
+if [ -n "$1" ]; then
+    echo "Connecting to database: $1"
+    mysql -u root "$1" || { echo "Error: Failed to connect to database '$1'" >&2; exit 2; }
+else
+    echo "Error: A valid database name needs to be entered" >&2
+    brew services stop mysql
+    exit 3
+fi

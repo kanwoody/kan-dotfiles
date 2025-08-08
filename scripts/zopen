@@ -1,0 +1,32 @@
+#!/bin/zsh
+
+function show_usage {
+    echo "┌────────────────────────────────────────────────────────────┐"
+    echo "|                                                            |"
+    echo "|            Usage: zopen <path>                             |"
+    echo "|                                                            |"
+    echo "└────────────────────────────────────────────────────────────┘"
+}
+
+if [[ -z "$1" ]]; then
+  echo "Error: Please provide a path to open." >&2
+  show_usage # Optionally, show usage when no argument is provided
+  exit 1
+fi
+
+if [[ ! -e "$1" ]]; then
+    echo "Error: The path '$1' does not exist." >&2
+    exit 1
+fi
+
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    show_usage
+    exit 0
+fi
+
+if ! zed -a "$1"; then
+    echo "Error: Zed failed to open '$1'" >&2
+    exit 1
+else
+    echo "Zed successfully opened '$1'"
+fi
