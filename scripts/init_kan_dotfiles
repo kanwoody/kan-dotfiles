@@ -38,9 +38,14 @@ main() {
         file_name="$(basename "${file_path}")"
         local symlink_target="$BIN_DIR/${file_name}"
         local target_script="$SCRIPT_DIR/${file_name}"
-        local readlink_result=readlink "${symlink_target}"
-        # j
-        # if [ ]
+        local readlink_result
+        readlink_result=$(readlink "${symlink_target}")
+        if [[ -L "${symlink_target}" ]]; then
+          echo "${symlink_target} is already a symlink"
+        else
+          ln -s "${target_script}" "${symlink_target}"
+          echo "Created symlink ${symlink_target} -> ${target_script}"
+        fi
         if [[ -x "${target_script}" ]]; then
             echo "${target_script} is already executable by ${USER}"
         else
