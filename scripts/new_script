@@ -25,6 +25,12 @@ BIN_DIR=$(expand_tilde "~/bin")
 TARGET_SCRIPT="$SCRIPT_DIR/$1"
 SYMLINK_TARGET="$BIN_DIR/$1"
 
+command -v "$1" > /dev/null 2>&1
+if [ $? -eq 0 ]; then
+  echo "\`$1\` already exists. Try another name."
+  exit 1
+fi
+
 mkdir -p "$SCRIPT_DIR"
 
 if [[ -e "$TARGET_SCRIPT" ]]; then

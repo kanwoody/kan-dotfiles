@@ -1,0 +1,19 @@
+#!/bin/zsh
+
+function show_usage {
+    echo "┌─────────────────┐"
+    echo "| \$ pwd | server |"
+    echo "└─────────────────┘"
+}
+
+main() {
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+      show_usage
+      exit 0
+  fi
+  local piped_input
+  piped_input=$(cat)
+  http-server "$piped_input" -c 0 -o
+}
+
+main "$@"
