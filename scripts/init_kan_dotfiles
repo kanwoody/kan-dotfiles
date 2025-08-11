@@ -1,0 +1,53 @@
+#!/bin/bash
+# When run, this script checks all files in ~/dotfiles/scripts & creates symlinks in ~/bin for all new scripts
+
+# #######################################
+# # Despite the Google shell styleguide, this function is declared before constants
+# # because it is a dependency for the constants.
+# ########################################
+# # Expand the tilde in paths that use the ~ shorthand for home directory.
+# # Arguments:
+# #   1: The path string to expand
+# # Outputs:
+# #   Writes the expanded path to stdout
+# #######################################
+expand_tilde() {
+    echo "$1" | sed "s|^~$|${HOME}|g; s|^~|${HOME}|g"
+}
+
+# maybe switch to BIN_DIR=$(expand_tilde "${HOME}/bin")
+readonly BIN_DIR="${HOME}/bin"
+# maybe switch to BIN_DIR=$(expand_tilde "${HOME}/dotfiles/scripts")
+readonly SCRIPT_DIR=$(expand_tilde "~/dotfiles/scripts")
+
+show_usage() {
+    echo "┌────────────────────┐"
+    echo "| \$ init_kan_dotfiles |"
+    echo "└────────────────────┘"
+}
+
+main() {
+
+    if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+        show_usage
+        exit 0
+    fi
+
+    for file_path in ~/dotfiles/scripts/*; do
+        local file_name
+        file_name="$(basename "${file_path}")"
+        local symlink_target="$BIN_DIR/${file_name}"
+        local target_script="$SCRIPT_DIR/${file_name}"
+        local readlink_result=readlink "${symlink_target}"
+        # j
+        # if [ ]
+        if [[ -x "${target_script}" ]]; then
+            echo "${target_script} is already executable by ${USER}"
+        else
+            chmod +x "${target_script}"
+            echo "Set executable permissions for ${target_script}"
+        fi
+    done
+}
+
+main "$@"
