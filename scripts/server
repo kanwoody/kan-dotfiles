@@ -1,15 +1,15 @@
 #!/bin/zsh
 
 function show_usage {
-    echo "┌─────────────────┐"
-    echo "| \$ pwd | server |"
-    echo "└─────────────────┘"
+  echo "┌────────────────┐"
+  echo "| \$ pwd | server |"
+  echo "└────────────────┘"
 }
 
 main() {
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
-      show_usage
-      exit 0
+    show_usage
+    exit 0
   fi
   local piped_input
   piped_input=$(cat)

@@ -1,18 +1,25 @@
-#!/bin/zsh
+#!/bin/bash
+# Description of this script
 
-function show_usage {
-    echo "┌─┐"
-    echo "||"
-    echo "└─┘"
+show_usage() {
+  echo "┌─┐"
+  echo "| \$ |"
+  echo "└─┘"
 }
 
-if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+main() {
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     show_usage
     exit 0
-fi
+  fi
 
-if [[ -z "$1" ]]; then
+  if [[ -z "$1" ]]; then
     echo "No argument provided"
     show_usage
     exit 1
-fi
+  fi
+
+  exit 0
+}
+
+main "$@"

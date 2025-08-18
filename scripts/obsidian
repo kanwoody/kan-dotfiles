@@ -1,0 +1,42 @@
+#!/bin/bash
+# Description of this script
+
+readonly NOTES_DIR="${HOME}/Documents/vault/quick_notes/"
+
+show_usage() {
+  echo "┌────────────────────────────────────────────────┐"
+  echo "| \$ obsidian <file_name> <optional_file_contents> |"
+  echo "└────────────────────────────────────────────────┘"
+}
+
+main() {
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    show_usage
+    exit 0
+  fi
+
+  if [[ -z "$1" ]]; then
+    echo "No argument provided"
+    show_usage
+    exit 1
+  fi
+
+  if [[ -e "$1" ]]; then
+    echo ""
+  fi
+
+  if [[ -d "${NOTES_DIR}" ]]; then
+    mkdir "${NOTES_DIR}"
+  fi
+
+  touch "${NOTES_DIR}$1"
+  echo "${NOTES_DIR}$1" | pbcopy
+
+  if [[ -z "$2" ]]; then
+    exit 0
+  fi
+
+  printf "%s\n" "$2"
+}
+
+main "$@"

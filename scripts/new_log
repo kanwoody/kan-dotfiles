@@ -1,0 +1,38 @@
+#!/bin/bash
+# Log things I do throughout the day so I remember everything I accomplish
+
+readonly LOG_FILE_PATH="${HOME}/proglo/logs.txt"
+
+show_usage() {
+  echo "┌─────────────────────────┐"
+  echo "| \$ new_log <log_message> |"
+  echo "└─────────────────────────┘"
+}
+
+main() {
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    show_usage
+    exit 0
+  fi
+
+  if [[ -z "$1" ]]; then
+    echo "No argument provided"
+    show_usage
+    exit 1
+  fi
+
+  if [[ -e LOG_FILE_PATH ]]; then
+    touch "${LOG_FILE_PATH}"
+    echo "Created log.txt in \${HOME}/proglo/"
+  fi
+
+  local today
+  today=$(date)
+  echo "${today} ➡︎ $1" >"${LOG_FILE_PATH}"
+  exit 0
+}
+
+main "$@"
+
+# build new_log
+# code review of dimensions update
