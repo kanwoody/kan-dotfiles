@@ -1,0 +1,35 @@
+#!/bin/bash
+# Description of this script
+
+show_usage() {
+  echo "┌─┐"
+  echo "| \$ |"
+  echo "└─┘"
+}
+
+main() {
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    show_usage
+    exit 0
+  fi
+
+  if [[ -z "$1" ]]; then
+    echo "No argument provided"
+    show_usage
+    exit 1
+  fi
+
+  exit 0
+}
+
+main "$@"
+
+# kanwoody@Kans-iMac scripts % ln -s ~/dotfiles/scripts/test ~/bin/test
+# kanwoody@Kans-iMac scripts % unlink ~/bin/test
+# kanwoody@Kans-iMac scripts % readlink ~/bin/test; echo $?
+# 1
+# kanwoody@Kans-iMac scripts % mv ~/dotfiles/scripts/{test,renamed}
+# kanwoody@Kans-iMac scripts % ln -s ~/dotfiles/scripts/renamed ~/bin/renamed
+# kanwoody@Kans-iMac scripts % readlink ~/bin/renamed; echo $?
+# /Users/kanwoody/dotfiles/scripts/renamed
+# 0

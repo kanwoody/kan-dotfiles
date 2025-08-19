@@ -25,7 +25,7 @@ main() {
     echo ""
   fi
 
-  if [[ -d "${NOTES_DIR}" ]]; then
+  if [[ ! -d "${NOTES_DIR}" ]]; then
     mkdir "${NOTES_DIR}"
   fi
 

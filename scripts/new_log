@@ -28,11 +28,8 @@ main() {
 
   local today
   today=$(date)
-  echo "${today} ➡︎ $1" >"${LOG_FILE_PATH}"
+  echo "${today} ➡︎ $1" >>"${LOG_FILE_PATH}"
   exit 0
 }
 
 main "$@"
-
-# build new_log
-# code review of dimensions update

@@ -1,0 +1,28 @@
+#!/bin/bash
+# View the entirety of ~/proglo/logs.txt
+
+readonly LOG_FILE_PATH="${HOME}/proglo/logs.txt"
+
+show_usage() {
+  echo "┌────────────┐"
+  echo "| \$ view_log |"
+  echo "└────────────┘"
+}
+
+main() {
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    show_usage
+    exit 0
+  fi
+
+  if [[ -e "${LOG_FILE_PATH}" ]]; then
+    cat "${LOG_FILE_PATH}"
+  else
+    echo "Warning: Could not find file: ${LOG_FILE_PATH}"
+    exit 1
+  fi
+
+  exit 0
+}
+
+main "$@"
