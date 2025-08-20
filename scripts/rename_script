@@ -8,16 +8,24 @@ show_usage() {
 }
 
 main() {
-  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
-    show_usage
-    exit 0
-  fi
 
-  if [[ -z "$1" ]]; then
-    echo "No argument provided"
-    show_usage
-    exit 1
-  fi
+    # printf "\e[1;31mLight Red Text\e[0m\n"
+    # printf "\e[1;32mLight Green Text\e[0m\n"
+    # printf "\e[1;33mYellow Text\e[0m\n"
+    # printf "\e[1;34mLight Blue Text\e[0m\n"
+    # printf "\e[1;35mLight Purple Text\e[0m\n"
+    # printf "\e[1;36mLight Cyan Text\e[0m\n"
+    # printf "\e[1;37mWhite Text\e[0m\n"
+  # if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+  #   show_usage
+  #   exit 0
+  # fi
+
+  # if [[ -z "$1" ]]; then
+  #   echo "No argument provided"
+  #   show_usage
+  #   exit 1
+  # fi
 
   exit 0
 }
