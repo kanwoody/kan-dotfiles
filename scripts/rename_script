@@ -1,6 +1,9 @@
 #!/bin/bash
 # Description of this script
 
+readonly BIN_DIR="${HOME}/bin"
+readonly SCRIPTS_DIR="${HOME}/dotfiles/scripts"
+
 show_usage() {
   echo "┌─┐"
   echo "| \$ |"
@@ -9,35 +12,56 @@ show_usage() {
 
 main() {
 
-    # printf "\e[1;31mLight Red Text\e[0m\n"
-    # printf "\e[1;32mLight Green Text\e[0m\n"
-    # printf "\e[1;33mYellow Text\e[0m\n"
-    # printf "\e[1;34mLight Blue Text\e[0m\n"
-    # printf "\e[1;35mLight Purple Text\e[0m\n"
-    # printf "\e[1;36mLight Cyan Text\e[0m\n"
-    # printf "\e[1;37mWhite Text\e[0m\n"
-  # if [[ "$1" == "-h" || "$1" == "--help" ]]; then
-  #   show_usage
-  #   exit 0
-  # fi
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    show_usage
+    exit 0
+  fi
 
-  # if [[ -z "$1" ]]; then
-  #   echo "No argument provided"
-  #   show_usage
-  #   exit 1
-  # fi
+  if [[ -z "$1" ]]; then
+    echo "Existing script name not provided"
+    show_usage
+    exit 1
+  fi
+
+  if [[ -z "$2" ]]; then
+    echo "New script name not provided"
+    show_usage
+    exit 1
+  fi
+
+  local existing_script_name="$1"
+  local symlink="${BIN_DIR}/${existing_script_name}"
+  local readlink_result
+  readlink_result=$(readlink "${symlink}")
+  if [[ "${readlink_result}" != "${SCRIPTS_DIR}/${existing_script_name}" ]]; then
+    echo "Symbolic link does not exist at ${symlink}"
+    echo "Exiting . . ."
+    exit 1
+  fi
+
+  local new_script_name="$2"
+  command -v "${new_script_name}" >/dev/null 2>&1
+  if [[ $? -eq 0 ]]; then
+    echo "\`${new_script_name}\` already exists. Try another name."
+    exit 1
+  fi
+
+  local unlink_result
+  unlink_result=$(
+    unlink "${symlink}"
+    echo $?
+  )
+  if [[ "${unlink_result}" -eq 1 ]]; then
+    echo "Failed to unlink ${symlink}"
+  fi
+
+  mv "${SCRIPTS_DIR}/${existing_script_name}" "${SCRIPTS_DIR}/${new_script_name}"
+  ln -s "${SCRIPTS_DIR}/${new_script_name}" "${BIN_DIR}/${new_script_name}"
+
+  echo "New symlink created:"
+  readlink "${BIN_DIR}/${new_script_name}"
 
   exit 0
 }
 
 main "$@"
-
-# kanwoody@Kans-iMac scripts % ln -s ~/dotfiles/scripts/test ~/bin/test
-# kanwoody@Kans-iMac scripts % unlink ~/bin/test
-# kanwoody@Kans-iMac scripts % readlink ~/bin/test; echo $?
-# 1
-# kanwoody@Kans-iMac scripts % mv ~/dotfiles/scripts/{test,renamed}
-# kanwoody@Kans-iMac scripts % ln -s ~/dotfiles/scripts/renamed ~/bin/renamed
-# kanwoody@Kans-iMac scripts % readlink ~/bin/renamed; echo $?
-# /Users/kanwoody/dotfiles/scripts/renamed
-# 0

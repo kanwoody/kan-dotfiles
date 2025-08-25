@@ -1,0 +1,44 @@
+#!/bin/bash
+# Description of this script
+
+readonly SECRET_NAME="pgsh_admin_key"
+readonly PROJECT_ID="proglo-secrets"
+readonly SS_URL="ssapi.shipstation.com/stores"
+
+show_usage() {
+  echo "┌─┐"
+  echo "| \$ |"
+  echo "└─┘"
+}
+
+main() {
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    show_usage
+    exit 0
+  fi
+
+  if [[ -z "$1" ]]; then
+    echo "No argument provided"
+    show_usage
+    exit 1
+  fi
+
+  local account
+  account=$(gcloud config get-value account)
+  echo "Do you want to proceed using \"${account}\"? (y/n)"
+  read proceed
+  if [[ "${proceed}" == "n" ]]; then
+    echo "Exiting . . ."
+    exit 0
+  fi
+
+  local admin_key
+  admin_key=$(gcloud secrets versions access latest --secret="${SECRET_NAME}" --project="${PROJECT_ID}")
+
+  local store_name="$1"
+  curl "${SS_URL}" -H "Authorization: Basic ${admin_key}" -v | jq ".[] | select(.storeName == \"${store_name}\")"
+
+  exit 0
+}
+
+main "$@"
