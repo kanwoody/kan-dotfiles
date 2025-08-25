@@ -1,5 +1,5 @@
 #!/bin/bash
-# Description of this script
+# Create a new file in Obsidian
 
 readonly NOTES_DIR="${HOME}/Documents/vault/quick_notes/"
 
@@ -29,8 +29,8 @@ main() {
     mkdir "${NOTES_DIR}"
   fi
 
-  touch "${NOTES_DIR}$1"
-  echo "${NOTES_DIR}$1" | pbcopy
+  touch "${NOTES_DIR}$1.md"
+  echo "${NOTES_DIR}$1.md" | pbcopy
 
   if [[ -z "$2" ]]; then
     exit 0
