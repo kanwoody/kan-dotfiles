@@ -1,0 +1,52 @@
+#!/opt/homebrew/bin/bash
+# View Obsidian notes & open in Vim
+
+readonly NOTES_DIR="${HOME}/Documents/vault/quick_notes/"
+
+show_usage() {
+  echo "┌────────────────┐"
+  echo "| \$ viewobsidian |"
+  echo "└────────────────┘"
+}
+
+main() {
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    show_usage
+    exit 0
+  fi
+
+  local -a files
+  readarray -d '' -t files < <(find "${NOTES_DIR}" -maxdepth 1 -type f -print0)
+
+  if ((${#files[@]} == 0)); then
+    echo "No files found in the current directory." >&2
+    return 1
+  fi
+
+  local -i i=0
+  for ((i = 0; i < "${#files[@]}"; i++)); do
+    local file="${files[${i}]}"
+
+    if [[ ! -f "${file}" ]]; then
+      echo "Item at index ${i} is not a regular file: ${file}" >&2
+    fi
+    local file_name
+    file_name=$(basename "${file}")
+    echo "[${i}]: ${file_name}"
+  done
+  echo "Select a file by entering it's index"
+  read index
+
+  if ((index < 0 || index >= ${#files[@]})); then
+    echo "Exiting . . ."
+    exit 1
+  fi
+
+  local selected_file="${files[${index}]}"
+  echo "Opening ${selected_file}..."
+  vim "${selected_file}"
+
+  exit 0
+}
+
+main "$@"
