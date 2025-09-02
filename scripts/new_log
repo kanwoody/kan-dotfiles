@@ -1,7 +1,8 @@
 #!/bin/bash
 # Log things I do throughout the day so I remember everything I accomplish
 
-readonly LOG_FILE_PATH="${HOME}/proglo/logs.txt"
+readonly LOG_FILE_PATH="${HOME}/Documents/vault/logs/logs.md"
+readonly LOG_DIR_PATH="${HOME}/Documents/vault/logs"
 
 show_usage() {
   echo "┌─────────────────────────┐"
@@ -21,14 +22,19 @@ main() {
     exit 1
   fi
 
-  if [[ -e LOG_FILE_PATH ]]; then
-    touch "${LOG_FILE_PATH}"
-    echo "Created log.txt in \${HOME}/proglo/"
+  if [[ ! -d "${LOG_DIR_PATH}" ]]; then
+    mkdir "${LOG_DIR_PATH}"
+    printf "\e[40;34mCreated %s\e[0m\n" "${LOG_DIR_PATH}"
   fi
 
-  local today
-  today=$(date)
-  echo "${today} ➡︎ $1" >>"${LOG_FILE_PATH}"
+  if [[ ! -e "${LOG_FILE_PATH}" ]]; then
+    touch "${LOG_FILE_PATH}"
+    printf "\e[40;34mCreated log.txt in %s\e[0m\n" "${LOG_DIR_PATH}"
+  fi
+
+  # local today
+  # today=$(date)
+  # echo "${today} ➡︎ $1" >>"${LOG_FILE_PATH}"
   exit 0
 }
 
