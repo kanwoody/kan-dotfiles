@@ -5,9 +5,9 @@
 readonly NOTES_DIR="${HOME}/Documents/vault/quick_notes/"
 
 show_usage() {
-  echo "┌────────────────┐"
+  echo "┌──────────┐"
   echo "| \$ openmd |"
-  echo "└────────────────┘"
+  echo "└──────────┘"
 }
 
 main() {

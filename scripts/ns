@@ -1,9 +1,10 @@
 #!/bin/zsh
+# Create a new script file and symlink to ~/bin/. The desired script name is verified to prevent overwriting existing commands.
 
 show_usage() {
-  echo "┌───────────────────┐"
-  echo "| new_script <name> |"
-  echo "└───────────────────┘"
+  echo "┌─────────────────────┐"
+  echo "| \$ new_script <name> |"
+  echo "└─────────────────────┘"
 }
 
 if [[ "$1" == "-h" || "$1" == "--help" ]]; then

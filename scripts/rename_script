@@ -1,13 +1,13 @@
 #!/bin/bash
-# Description of this script
+# Unlink the existing symlink for a script, rename it, and relink it to ~/bin/
 
 readonly BIN_DIR="${HOME}/bin"
 readonly SCRIPTS_DIR="${HOME}/dotfiles/scripts"
 
 show_usage() {
-  echo "┌─┐"
-  echo "| \$ |"
-  echo "└─┘"
+  echo "┌─────────────────────────────────────────────┐"
+  echo "| \$ rename_script <existing_name> <new_name>  |"
+  echo "└─────────────────────────────────────────────┘"
 }
 
 main() {

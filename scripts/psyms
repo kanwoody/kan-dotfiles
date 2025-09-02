@@ -1,0 +1,32 @@
+#!/bin/bash
+# Purge unused symbolic links
+# TODO:
+# shopt -s nullglob
+# check if file is symlink -L
+# dry run / confirmation
+readonly BIN_DIR="${HOME}/bin"
+
+show_usage() {
+  echo "┌─────────┐"
+  echo "| \$ psyms |"
+  echo "└─────────┘"
+}
+
+main() {
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    show_usage
+    exit 0
+  fi
+
+  for file in "${BIN_DIR}"/*; do
+    local symlink
+    symlink="$(readlink "${file}")"
+    if [[ ! -e "${symlink}" ]]; then
+      rm "${file}"
+    fi
+  done
+
+  exit 0
+}
+
+main "$@"
