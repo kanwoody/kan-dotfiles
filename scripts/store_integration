@@ -6,9 +6,9 @@ readonly PROJECT_ID="proglo-secrets"
 readonly SS_URL="ssapi.shipstation.com/stores"
 
 show_usage() {
-  echo "┌─┐"
-  echo "| \$ |"
-  echo "└─┘"
+  echo "┌──────────────────────────────────┐"
+  echo "| \$ store_integration <store_name> |"
+  echo "└──────────────────────────────────┘"
 }
 
 main() {
