@@ -32,9 +32,9 @@ main() {
     printf "\e[40;34mCreated log.txt in %s\e[0m\n" "${LOG_DIR_PATH}"
   fi
 
-  # local today
-  # today=$(date)
-  # echo "${today} ➡︎ $1" >>"${LOG_FILE_PATH}"
+  local today
+  today=$(date)
+  echo "${today} ➡︎ $1" >>"${LOG_FILE_PATH}"
   exit 0
 }
 
