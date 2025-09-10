@@ -1,0 +1,58 @@
+#!/bin/bash
+# Description of this script
+
+readonly CBOCR_DIR="${HOME}/cbocr"
+readonly TEMP_IMAGE_NAME="image.png"
+readonly TEMP_OUTPUT_NAME="cbocr_output"
+
+show_usage() {
+  echo "┌─────────┐"
+  echo "| \$ cbocr |"
+  echo "└─────────┘"
+}
+
+main() {
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    show_usage
+    exit 0
+  fi
+
+  local pngpaste_exists
+  pngpaste_exists=$(command -v pngpaste)
+  if [[ -z "${pngpaste_exists}" ]]; then
+    echo "pngpaste is not installed"
+    echo "run 'brew install pngpaste' to install it"
+    exit 1
+  fi
+
+  local tesseract_exists
+  tesseract_exists=$(command -v tesseract)
+  if [[ -z "${tesseract_exists}" ]]; then
+    echo "tesseract is not installed"
+    echo "run 'brew install tesseract' to install it"
+    exit 1
+  fi
+
+  local clipboard_info
+  clipboard_info=$(osascript -e 'clipboard info')
+  if [[ "${clipboard_info}" != *"PNG"* ]]; then
+    echo "Clipboard does not contain an image."
+    exit 1
+  fi
+
+  pngpaste "${CBOCR_DIR}/${TEMP_IMAGE_NAME}"
+  tesseract "${CBOCR_DIR}/${TEMP_IMAGE_NAME}" "${CBOCR_DIR}/${TEMP_OUTPUT_NAME}" -l eng || {
+    echo "tesseract failed to process the image"
+    echo "Removing /tmp/cbocr.png"
+    rm /tmp/cbocr.png
+    echo "Exiting . . ."
+    exit 1
+  }
+  echo "The following will be copied to clipboard:"
+  cat "${CBOCR_DIR}/${TEMP_OUTPUT_NAME}.txt"
+  cat "${CBOCR_DIR}/${TEMP_OUTPUT_NAME}.txt" | pbcopy
+
+  exit 0
+}
+
+main "$@"
