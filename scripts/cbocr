@@ -1,5 +1,5 @@
 #!/bin/bash
-# Description of this script
+# Use tesseract to perform OCR on an image in the clipboard and copy the result back to the clipboard
 
 readonly CBOCR_DIR="${HOME}/cbocr"
 readonly TEMP_IMAGE_NAME="image.png"
@@ -15,6 +15,11 @@ main() {
   if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     show_usage
     exit 0
+  fi
+
+  if [[ ! -d "${CBOCR_DIR}" ]]; then
+    mkdir "${CBOCR_DIR}"
+    echo "Created directory: ${CBOCR_DIR}"
   fi
 
   local pngpaste_exists
