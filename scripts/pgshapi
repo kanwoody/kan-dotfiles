@@ -1,0 +1,71 @@
+#!/bin/bash
+# Create or delete an API credential for a PGSH user - response is copied to clipboard
+
+readonly OPTIND=2
+
+show_usage() {
+  echo "┌──────────────────────────────┐"
+  echo "| \$ pgsh <user_id> -c(reate) -d(elete) -s(taging) |"
+  echo "└──────────────────────────────┘"
+}
+
+main() {
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    show_usage
+    exit 0
+  fi
+
+  local user_id=$1
+  if [ -z "$user_id" ]; then
+      err "Please provide a user_id"
+      return 1
+  fi
+
+  local cflag=''
+  local dflag=''
+  local sflag=''
+  while getopts 'scd' flag; do
+      case "${flag}" in
+          s) sflag='true' ;;
+          c) cflag='true' ;;
+          d) dflag='true' ;;
+          *) err "Unexpected option ${flag}" ;;
+      esac
+  done
+
+  if [[ "$cflag" = 'true' ]] && [[ "$dflag" = 'true' ]]; then
+      err "Cannot create and delete an API credential at the same time"
+      return 1
+  fi
+
+  if [[ "$cflag" = '' ]] && [[ "$dflag" = '' ]]; then
+      echo "cflag: $cflag"
+      echo "dflag: $dflag"
+      err "Please provide a flag to create or delete an API credential"
+      return 1
+  fi
+
+  if [[ "$sflag" = 'true' ]]; then
+      domain='localhost:3000/api'
+  else
+      domain='progloshipping.com/api'
+  fi
+
+  if [[ "$cflag" = 'true' ]]; then
+      echo "Creating API credential for user $user_id"
+      echo "Domain: $domain"
+      echo "User ID: $user_id"
+      echo "Credential: $ADMIN"
+      response=$(post "$domain/create-client-credential" "{\"userId\": \"$user_id\", \"credential\": \"$ADMIN\"}")
+      echo "$response" | jq | tee >(clip)
+  fi
+
+  if [[ "$dflag" = 'true' ]]; then
+      response=$(post "$domain/delete-client-credential" "{\"userId\": \"$user_id\", \"credential\": \"$ADMIN\"}")
+      echo "$response" | jq | tee >(clip)
+  fi
+
+  exit 0
+}
+
+main "$@"
