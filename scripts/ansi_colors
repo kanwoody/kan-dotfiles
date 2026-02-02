@@ -3,9 +3,9 @@
 #   out of 17 (default + 16 escapes), followed by a test use of that color on all nine background colors (default + 8 escapes).
 
 show_usage() {
-  echo "┌─┐"
-  echo "| \$ |"
-  echo "└─┘"
+  echo "╔═══════════════╗"
+  echo "║ \$ ansi_colors ║"
+  echo "╚═══════════════╝"
 }
 
 main() {

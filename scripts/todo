@@ -1,0 +1,20 @@
+#!/bin/bash
+# Open my TODOs in Obsidian
+
+show_usage() {
+  echo "╔════════╗"
+  echo "║ \$ todo ║"
+  echo "╚════════╝"
+}
+
+main() {
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    show_usage
+    exit 0
+  fi
+
+    open "obsidian://open?vault=vault&file=todo/list.md"
+  exit 0
+}
+
+main "$@"
