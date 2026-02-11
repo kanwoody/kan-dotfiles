@@ -1,0 +1,23 @@
+#!/bin/bash
+# Print a box to my termnial so I don't need to look up the characters anymore
+
+show_usage() {
+  echo "╔═════════╗"
+  echo "║ \$ box ║"
+  echo "╚═════════╝"
+}
+
+main() {
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    show_usage
+    exit 0
+  fi
+
+  echo "╔═════════╗"
+  echo "║         ║"
+  echo "╚═════════╝"
+
+  exit 0
+}
+
+main "$@"

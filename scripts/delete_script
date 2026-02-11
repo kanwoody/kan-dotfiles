@@ -1,9 +1,9 @@
 #!/bin/zsh
 
 function show_usage {
-    echo "┌─┐"
-    echo "||"
-    echo "└─┘"
+    echo "┌───────────────────────────────┐"
+    echo "| \$ delete_script <script_name> |"
+    echo "└───────────────────────────────┘"
 }
 
 if [[ "$1" == "-h" || "$1" == "--help" ]]; then
@@ -12,7 +12,7 @@ if [[ "$1" == "-h" || "$1" == "--help" ]]; then
 fi
 
 if [[ -z "$1" ]]; then
-    echo "No argument provided"
+    echo "Error: No script name provided."
     exit 1
 fi
 
