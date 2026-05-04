@@ -1,0 +1,77 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "project_panel": {
+    "dock": "left",
+  },
+  "outline_panel": {
+    "dock": "left",
+  },
+  "collaboration_panel": {
+    "dock": "left",
+  },
+  "git_panel": {
+    "dock": "left",
+  },
+  "icon_theme": {
+    "mode": "dark",
+    "light": "Catppuccin Macchiato",
+    "dark": "Kokedera Icons",
+  },
+  "format_on_save": "on",
+  "tab_size": 2,
+  "agent": {
+    "dock": "right",
+    "tool_permissions": {
+      "default": "allow",
+    },
+    "default_profile": "minimal",
+    "default_model": {
+      "provider": "copilot_chat",
+      "model": "gemini-2.5-pro",
+    },
+  },
+  "edit_predictions": {
+    "provider": "copilot",
+    "disabled_globs": [],
+    "mode": "eager",
+    "copilot": {
+      "proxy": null,
+      "proxy_no_verify": null,
+    },
+    "enabled_in_text_threads": true,
+  },
+  "vim_mode": true,
+  "ui_font_size": 16,
+  "buffer_font_size": 16,
+  "preferred_line_length": 300,
+  "theme": {
+    "mode": "dark",
+    "light": "Monosami Light",
+    "dark": "Kan Dark",
+  },
+  "experimental.theme_overrides": {
+    "players": [
+      {
+        "cursor": "#D1B897",
+        "selection": "#280806",
+      },
+    ],
+  },
+  "lsp": {
+    "gopls": {
+      "initialization_options": {
+        "env": {
+          "GOROOT": "/opt/homebrew/Cellar/go/1.24.4/libexec",
+          "GOPATH": "/Users/kanwoody/go",
+        },
+      },
+    },
+  },
+}
