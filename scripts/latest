@@ -1,0 +1,27 @@
+#!/bin/bash
+# Print the name of the most recently created file in ~/Downloads
+
+show_usage() {
+  echo "┌───────────────────────┐"
+  echo "| \$ latest <file_count> |"
+  echo "└───────────────────────┘"
+}
+
+main() {
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    show_usage
+    exit 0
+  fi
+
+  if [[ -z "$1" ]]; then
+    echo "No argument provided"
+    show_usage
+    exit 1
+  fi
+
+  ls -t ~/Downloads | head -n "${1}"
+
+  exit 0
+}
+
+main "$@"
