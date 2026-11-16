@@ -1,0 +1,71 @@
+#!/bin/bash
+# Given a path to the pdf,
+
+show_usage() {
+  echo "┌────────────────────────────────────────────┐"
+  echo "| \$ catalog <catalog_path> <repository_path> |"
+  echo "└────────────────────────────────────────────┘"
+}
+
+readonly PGD_ROOT_COMMIT_HASH="bcf9c928138103116afe49a8727cd8909c136dba"
+
+main() {
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    show_usage
+    exit 0
+  fi
+
+  if (($# != 2)); then
+    echo "Error: Expected two arguments"
+    show_usage
+    exit 1
+  fi
+
+  local catalog_path="${1}"
+  local catalog_path_mimetype
+  catalog_path_mimetype=$(file -b --mime-type -- "${catalog_path}")
+  if [[ "${catalog_path_mimetype}" != "application/pdf" ]]; then
+    echo "Error: Path \"${catalog_path}\" does not lead to a .pdf"
+    exit 1
+  fi
+  echo "${catalog_path} validated as ${catalog_path_mimetype} ☑️"
+
+  local repository_path="${2}"
+  local repository_root_commit_hash
+  repository_root_commit_hash=$(git -C "${repository_path}" rev-list --max-parents=0 HEAD)
+  if [[ "${repository_root_commit_hash}" != "${PGD_ROOT_COMMIT_HASH}" ]]; then
+    echo "Error: Invalid root commit hash from \"${repository_path}\""
+    exit 1
+  fi
+  echo "${repository_path} root hash passed validation ☑️"
+
+  local image_directory_path="${repository_path}/catalog/assets/images"
+  local existing_page_count
+  existing_page_count=$(ls -1A "${image_directory_path}" | wc -l)
+  echo "Removing ${existing_page_count} files from the previous catalog"
+  for file in "${image_directory_path}"/*.png; do
+    rm "${file}"
+  done
+  echo "${existing_page_count} files removed from ${image_directory_path}"
+
+  local page_count
+  page_count=$(mdls -name kMDItemNumberOfPages -raw "${catalog_path}")
+  echo "Creating ${page} new files in ${image_directory_path}"
+  pdftocairo -png "${catalog_path}" "${image_directory_path}/page"
+  echo "Created ${page} new files in ${image_directory_path}"
+
+  # Not super impactful but page count can be validated in case the variable doesn't need to change
+  local catalog_index_path="${repository_path}/catalog/index.html"
+  sed -i '' -E 's/^([[:space:]]*)const TOTAL_PAGES = [0-9]+;/\1const TOTAL_PAGES = '"${page_count}"';/' "${catalog_index_path}"
+
+  local catalog_name
+  catalog_name=$(latest 1)
+
+  git -C "${repository_path}" add .
+  git -C "${repository_path}" commit -m "updated with: ${catalog_name}"
+  git -C "${repository_path}" push
+
+  exit 0
+}
+
+main "$@"
